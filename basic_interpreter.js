@@ -303,9 +303,9 @@ function handleClear() {
 }
 
 /**
- * FOR 루프 처리
+ * FOR 루프 처리 (비동기 애니메이션 지원)
  */
-function handleFor(tokens, all_tokens, current_idx) {
+async function handleFor(tokens, all_tokens, current_idx) {
     const var_name = tokens[1];
     const start_val = getValue(tokens[3]);
     const end_val = getValue(tokens[5]);
@@ -327,8 +327,15 @@ function handleFor(tokens, all_tokens, current_idx) {
         // 루프 내부 실행
         for (let i = loop_start + 1; i < loop_end; i++) {
             if (should_stop) break;
-            executeLine(all_tokens[i], all_tokens, i);
+            const result = await executeLine(all_tokens[i], all_tokens, i);
+            if (result !== i) {
+                i = result - 1;
+                continue;
+            }
         }
+        
+        // 화면 업데이트를 위한 지연 (애니메이션 효과)
+        await new Promise(resolve => setTimeout(resolve, 16)); // 약 60fps
         
         variables[var_name]++;
     }
@@ -380,7 +387,7 @@ function handleIf(tokens, all_tokens, current_idx) {
 /**
  * 한 줄 실행
  */
-function executeLine(tokens, all_tokens, current_idx) {
+async function executeLine(tokens, all_tokens, current_idx) {
     if (!tokens || tokens.length === 0) return current_idx;
     
     const command = tokens[0].toUpperCase();
@@ -421,7 +428,7 @@ function executeLine(tokens, all_tokens, current_idx) {
             }
             break;
         case 'FOR':
-            return handleFor(tokens, all_tokens, current_idx);
+            return await handleFor(tokens, all_tokens, current_idx);
         case 'IF':
             return handleIf(tokens, all_tokens, current_idx);
         case 'NEXT':
@@ -537,7 +544,7 @@ async function runCode() {
         for (let i = 0; i < tokens.length; i++) {
             if (should_stop) break;
             
-            i = executeLine(tokens[i], tokens, i);
+            i = await executeLine(tokens[i], tokens, i);
             
             // 출력 업데이트
             if (current_mode === 'TEXT') {
