@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>베이직 개발환경</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="editor_container">
+        <div class="toolbar">
+            <button id="open_btn">열기</button>
+            <button id="save_btn">저장</button>
+            <button id="run_btn">
+                <span class="btn_icon"></span>
+                <span class="btn_text">실행</span>
+            </button>
+            <button id="mode_btn" disabled>텍스트 모드</button>
+            <select id="example_select">
+                <option value="">예제 선택...</option>
+            </select>
+            <input type="file" id="file_input" accept=".bas,.txt" style="display: none;">
+        </div>
+        <div class="main_content">
+            <div class="editor_wrapper">
+                <div class="editor_content">
+                    <div class="line_numbers" id="line_numbers"></div>
+                    <textarea id="editor" spellcheck="false"></textarea>
+                </div>
+                <div class="status_bar">
+                    <span id="status_text">행: 1, 열: 1 | 길이: 0 | 커서: 0</span>
+                </div>
+            </div>
+            <div class="output_wrapper">
+                <div class="computer_monitor">
+                    <div class="monitor_frame">
+                        <div class="monitor_bezel">
+                            <div class="monitor_screen">
+                                <div class="execution_screen">
+                                    <canvas id="graphics_canvas"></canvas>
+                                    <div id="text_mode_display" class="hidden"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="monitor_brand">CodingPen</div>
+                    </div>
+                </div>
+                <div class="console_output" id="console_output"></div>
+            </div>
+        </div>
+    </div>
+    <script src="examples.js"></script>
+    <script src="file_handler.js"></script>
+    <script src="graphics_engine.js"></script>
+    <script src="basic_interpreter.js"></script>
+    <script src="editor.js"></script>
+</body>
+</html>
+
